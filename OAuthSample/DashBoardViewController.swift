@@ -18,8 +18,8 @@ class DashBoardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let defaults = NSUserDefaults.standardUserDefaults()
-        access_token.text = defaults.stringForKey("oauth_token")
+        let defaults = UserDefaults.standard
+        access_token.text = defaults.string(forKey: "oauth_token")
         // Do any additional setup after loading the view.
     }
 
@@ -30,9 +30,14 @@ class DashBoardViewController: UIViewController {
     
     @IBAction func clickUser(sender: AnyObject) {
         apiResult.text = ""
-        Alamofire.request(.GET, "https://api.github.com/user", parameters: ["access_token": access_token.text!])
+        
+        Alamofire.request(
+            "https://api.github.com/user",
+            method: .get,
+            parameters: ["access_token": access_token.text!])
             .responseJSON { response in
                 if let json = response.result.value {
+                    let json = json as AnyObject
                     self.apiResult.text = json.description
                 }
         }

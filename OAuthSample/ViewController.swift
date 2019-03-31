@@ -29,18 +29,19 @@ class ViewController: UIViewController {
             accessTokenUrl: "https://github.com/login/oauth/access_token",
             responseType:   "code"
         )
-        oauthswift.authorizeWithCallbackURL(
-            NSURL(string: "oauth-sample://oauth-callback")!,
-            scope: "", state:"OAuthSample",
+        oauthswift.authorize(
+            withCallbackURL: URL(string: "oauth-sample://oauth-callback")!,
+            scope: "",
+            state: "OAuthSample",
             success: { credential, response, parameters in
-                print(credential.oauth_token)
+                print(credential.oauthToken)
 
-                let defaults = NSUserDefaults.standardUserDefaults()
-                defaults.setValue(credential.oauth_token, forKey: "oauth_token")
+                let defaults = UserDefaults.standard
+                defaults.setValue(credential.oauthToken, forKey: "oauth_token")
 
-                let nextVC = self.storyboard?.instantiateViewControllerWithIdentifier("DashBoard")
-                nextVC?.modalTransitionStyle = .CrossDissolve
-                self.presentViewController(nextVC!, animated: true, completion: nil)
+                let nextVC = self.storyboard?.instantiateViewController(withIdentifier: "DashBoard")
+                nextVC?.modalTransitionStyle = .crossDissolve
+                self.present(nextVC!, animated: true, completion: nil)
             },
             failure: { error in
                 print(error.localizedDescription)
